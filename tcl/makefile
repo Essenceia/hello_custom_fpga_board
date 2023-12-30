@@ -1,15 +1,24 @@
 # TCL makefile, used to automatise clean as overwrite functionality
 # fails on quartus projects that have been build with an error
 
-PROJECT=PCS
+PROJECT=led_blink
 PROJECT_DIR=$(PROJECT)
 PROJECT_FILE=$(PROJECT).qpf
 
 LANG=VERILOG
 QUARTUS_TCL=quartus_sh -t
 
+
 RTL_DIR=..
 FPGA_DIR=../cy10gx
+
+# makefile paramters: timing report, details report of number worst paths
+ifndef nworst
+nworst := 100
+endif
+ifndef npaths
+npaths := 10
+endif
 
 # Compatibility mode : rework ip generation tcl files
 ifndef compat
@@ -22,36 +31,7 @@ endif
 ########
 # init project
 init:quartus_init.tcl
-	$(QUARTUS_TCL) $<	 
-
- 
-######
-# IP #
-######
-
-QSYS_ARGS:= --quartus-project=$(PROJECT).qpf
-
-# Clean existing ip file and generate new IP instance
-define IP_CLEAN
-	rm -fr $1
-	rm -f $1.ip
-	rm -f $1.qdf
-	rm -f $1.qpf
-
-endef
-define IP_GEN
-$1: $1.tcl $(PROJECT_FILE)
-	$$(call IP_CLEAN,$$@)
-	$(if $(compat),$(info Compatibility mode dissabled),./clean_ip_tcl.sh $1.tcl)
-	qsys-script --script=$$< $(QSYS_ARGS)
-	qsys-generate $$@.ip --synthesis=$(LANG) $(QSYS_ARGS)
-
-endef
-
-# ip list
-ip_list := trans qsfp_trans phy_rst atxpll cdc_fifo pcs_core_fpll
-
-$(eval $(foreach x,$(ip_list),$(call IP_GEN,$x)))
+	$(QUARTUS_TCL) $< "$(PROJECT)"
 
 ###########
 # Project #
@@ -61,7 +41,7 @@ bsp_deps:= $(FPGA_DIR)/bsp_lite.tcl timing.sdc
  
 # setup project files and IP
 setup:quartus_setup.tcl $(bsp_deps) $(PROJECT_FILE) $(ip_list)
-	$(QUARTUS_TCL) $<
+	$(QUARTUS_TCL) $< "$(PROJECT)" "$(PROJECT_DIR)" "$(RTL_DIR)" "$(FPGA_DIR)"
 
 # lint
 # call lint when ip files are modified or when
@@ -70,7 +50,7 @@ rtl_deps = $(shell ls $(RTL_DIR)/*.v) $(FPGA_DIR)/top.v
 
 
 lint:quartus_lint.tcl setup $(rtl_deps) 
-	$(QUARTUS_TCL) $<
+	$(QUARTUS_TCL) $< "$(PROJECT)"
 
 # synth
 synth:
@@ -81,7 +61,7 @@ fit:
 	quartus_fit $(PROJECT)
 
 timing: quartus_timing.tcl
-	quartus_sta -t $<
+	quartus_sta -t $< "$(PROJECT)" "$(nworst)" "$(npaths)"
 
 # by default assemble will produce a SRAM object file ( .sof )
 # programmed using passive serial

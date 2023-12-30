@@ -47,9 +47,12 @@ always @(posedge OSC_50m) begin
 		led_q <= {{LED_W-1{1'b0}}, 1'b1};
 	end else begin
 		if ( cnt_of ) begin
-		led_q = { led_qLED_W-2:0], led_q[LED_W-1]};
+		led_q = { led_q[LED_W-2:0], led_q[LED_W-1]};
 		end
 	end
 end
+
+/* drive output led */
+assign USER_LED = led_q;
 
 endmodule

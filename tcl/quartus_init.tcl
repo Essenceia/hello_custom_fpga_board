@@ -5,7 +5,7 @@ source utils.tcl
 
 # Setup PCS project for quartus
 
-set project_name "PCS"
+set project_name [lindex $argv 0]
 
 set fpga_family "Cyclone 10 GX"
 

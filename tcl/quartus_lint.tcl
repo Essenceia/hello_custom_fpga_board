@@ -3,7 +3,7 @@ load_package ::quartus::flow
 
 source utils.tcl
 
-set project_name "PCS"
+set project_name [lindex $argv 0]
 
 # Open project
 project_open $project_name.qpf 
