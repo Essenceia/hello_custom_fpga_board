@@ -40,14 +40,22 @@ always @(posedge OSC_50m) begin
 	end
 end
 /* led array blink */
-logic [LED_W-1:0] led_q;
+logic [LED_W-1:0] led_next;
+reg   [LED_W-1:0] led_q;
+reg               dir_q;
+logic             dir_next;
+
+assign dir_next = dir_q & ~led_q[LED_W-1] | ~dir_q & led_q[0];
+assign led_next = dir_q ? {led_q[LED_W-2:0], led_q[LED_W-1]} : {led_q[0], led_q[LED_W-1:1]};
 
 always @(posedge OSC_50m) begin
 	if (~io_master_nreset)begin
 		led_q <= {{LED_W-1{1'b0}}, 1'b1};
+		dir_q <= 1'b1;
 	end else begin
 		if ( cnt_of ) begin
-		led_q = { led_q[LED_W-2:0], led_q[LED_W-1]};
+		led_q = led_next;
+		dir_q <= dir_next;
 		end
 	end
 end

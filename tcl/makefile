@@ -105,3 +105,4 @@ clean:
 	rm -rf $(PROJECT)
 	rm -rf pcs
 	rm -f serv_req_info.txt
+	rm -f tap.q*
