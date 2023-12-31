@@ -1,7 +1,7 @@
 /* TOP module for cyclone 10 gx fpga 
  * PCS loopback */
 module top #(
-	parameter CNT_W = 15,
+	parameter CNT_W = 25,
 	parameter LED_W = 10
 )(
     input  wire        OSC_50m,     // 50MHz

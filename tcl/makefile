@@ -83,10 +83,13 @@ build:
 	$(MAKE) rebuild_timing
 	$(MAKE) assemble
 
-rebuild_timing:
+rebuild:
 	$(MAKE) lint
 	$(MAKE) synth
 	$(MAKE) fit
+
+rebuild_timing:
+	$(MAKE) rebuild
 	$(MAKE) timing
 
 # clean
