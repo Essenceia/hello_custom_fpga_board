@@ -68,20 +68,20 @@ timing: quartus_timing.tcl
 SOF_OBJ := $(PROJECT_DIR)/$(PROJECT).sof
 PROG := "USB-Blaster [1-3]"
 
-$(SOF_OBJ):
+assemble:
 	quartus_asm $(PROJECT)
 
-prog_sof: $(SOF_OBJ)
+prog: assemble
 	quartus_pgm -c $(PROG) -m JTAG -o "p;$(SOF_OBJ)@1"
 
 tap:
-	quartus_stp $(PROJECT) 	
+	quartus_stpw tap.stp 	
 
 build:
 	$(MAKE) init	
 	$(MAKE) setup
 	$(MAKE) rebuild_timing
-	$(MAKE) assemble
+	$(MAKE) prog
 
 rebuild:
 	$(MAKE) lint

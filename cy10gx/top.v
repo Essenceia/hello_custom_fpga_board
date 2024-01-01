@@ -1,8 +1,8 @@
 /* TOP module for cyclone 10 gx fpga 
  * led blink */
 module top #(
-	parameter CNT_W = 25,
-	parameter LED_W = 9 /* only 9 leds in blue led array */ 
+	parameter CNT_W = 24,
+	parameter LED_W = 8 /* only 8 leds in blue led array */ 
 )(
     input  wire        OSC_50m,     // 50MHz
     input  wire        FPGA_RSTn,   //3.0V async reset in from BMC/RESET button
