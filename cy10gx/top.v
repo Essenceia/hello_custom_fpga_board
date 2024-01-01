@@ -1,8 +1,8 @@
 /* TOP module for cyclone 10 gx fpga 
- * PCS loopback */
+ * led blink */
 module top #(
 	parameter CNT_W = 25,
-	parameter LED_W = 10
+	parameter LED_W = 9 /* only 9 leds in blue led array */ 
 )(
     input  wire        OSC_50m,     // 50MHz
     input  wire        FPGA_RSTn,   //3.0V async reset in from BMC/RESET button
@@ -45,8 +45,10 @@ reg   [LED_W-1:0] led_q;
 reg               dir_q;
 logic             dir_next;
 
-assign dir_next = dir_q & ~led_q[LED_W-1] | ~dir_q & led_q[0];
-assign led_next = dir_q ? {led_q[LED_W-2:0], led_q[LED_W-1]} : {led_q[0], led_q[LED_W-1:1]};
+assign dir_next = dir_q ? ~led_q[LED_W-1] : led_q[0];
+assign led_next = dir_q ? 
+{led_q[LED_W-2:0], led_q[LED_W-1]} 
+: { 1'b0 , led_q[LED_W-1:1]};
 
 always @(posedge OSC_50m) begin
 	if (~io_master_nreset)begin

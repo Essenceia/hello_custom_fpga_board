@@ -46,7 +46,7 @@ setup:quartus_setup.tcl $(bsp_deps) $(PROJECT_FILE) $(ip_list)
 # lint
 # call lint when ip files are modified or when
 # verilog files are modified
-rtl_deps = $(shell ls $(RTL_DIR)/*.v) $(FPGA_DIR)/top.v 
+rtl_deps = $(FPGA_DIR)/top.v 
 
 
 lint:quartus_lint.tcl setup $(rtl_deps) 

@@ -23,7 +23,6 @@ set_location_assignment PIN_B11 -to USER_LED[5]
 set_location_assignment PIN_A11 -to USER_LED[6]
 set_location_assignment PIN_A12 -to USER_LED[7]
 set_location_assignment PIN_A13 -to USER_LED[8]
-set_location_assignment PIN_B13 -to USER_LED[9]
 set_instance_assignment -name IO_STANDARD "1.8 V" -to "USER_LED[*]"
 
 # Thermal
