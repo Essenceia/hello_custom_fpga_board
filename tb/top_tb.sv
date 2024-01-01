@@ -1,7 +1,7 @@
 module top_tb;
 
 localparam LED_W = 8;
-localparam CNT_W = 1;
+localparam CNT_W = 2;
 
 logic nreset; 
 reg clk = 1'b1;
@@ -16,7 +16,7 @@ initial begin
 	nreset = 1'b0;
 	#10
 	nreset = 1'b1;
-	#100;
+	#3000;
 
 	$finish;	
 end

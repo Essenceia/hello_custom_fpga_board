@@ -45,7 +45,7 @@ reg   [LED_W-1:0] led_q;
 reg               dir_q;
 logic             dir_next;
 
-assign dir_next = dir_q ? ~led_q[LED_W-1] : led_q[0];
+assign dir_next = dir_q ? ~led_q[LED_W-2] : led_q[1];
 assign led_next = dir_q ? 
 {led_q[LED_W-2:0], led_q[LED_W-1]} 
 : { 1'b0 , led_q[LED_W-1:1]};
