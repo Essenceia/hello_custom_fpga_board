@@ -3,6 +3,8 @@
 This project contains the design files for a simple `led blink` project in
 order to get more familiar with the custom `BitScreamer` board and quartus `Signal Tap`.
 
+![fpga board](fpga.webp)
+
 ## Quick start
 
 The following commands are to be run from the `tcl` directory.
