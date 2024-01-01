@@ -4,11 +4,10 @@ module top #(
 	parameter CNT_W = 24,
 	parameter LED_W = 8 /* only 8 leds in blue led array */ 
 )(
-    input  wire        OSC_50m,     // 50MHz
-    input  wire        FPGA_RSTn,   //3.0V async reset in from BMC/RESET button
-	/* led array */
-	output wire [LED_W-1:0] USER_LED 
-
+	input  wire        OSC_50m,     // 50MHz
+	input  wire        FPGA_RSTn,   //3.0V async reset in from BMC/RESET button
+	
+	output wire [LED_W-1:0] USER_LED // blue led array 
 );
 
 /* reset from IO, using asynchronous reset synchronizer circuit */
@@ -40,24 +39,24 @@ always @(posedge OSC_50m) begin
 	end
 end
 /* led array blink */
+logic             led_en;
 logic [LED_W-1:0] led_next;
 reg   [LED_W-1:0] led_q;
 reg               dir_q;
 logic             dir_next;
 
 assign dir_next = dir_q ? ~led_q[LED_W-2] : led_q[1];
-assign led_next = dir_q ? 
-{led_q[LED_W-2:0], led_q[LED_W-1]} 
-: { 1'b0 , led_q[LED_W-1:1]};
+assign led_next = dir_q ? {led_q[LED_W-2:0], led_q[LED_W-1]} : { 1'b0 , led_q[LED_W-1:1]};
+assign led_en   = cnt_of;
 
 always @(posedge OSC_50m) begin
 	if (~io_master_nreset)begin
 		led_q <= {{LED_W-1{1'b0}}, 1'b1};
 		dir_q <= 1'b1;
 	end else begin
-		if ( cnt_of ) begin
-		led_q = led_next;
-		dir_q <= dir_next;
+		if ( led_en ) begin
+			led_q <= led_next;
+			dir_q <= dir_next;
 		end
 	end
 end
